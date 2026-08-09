@@ -35,15 +35,22 @@
             <xpath expr="//search" position="inside">
                 <field name="national_id" string="رقم البطاقة"
                        filter_domain="[('national_id', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 4) فلاتر بسيطة (له رقم بطاقة / بدون) في ريكورد منفصل لتقليل احتمالية أي تعارض -->
+    <record id="view_res_partner_filter_national_id_filters" model="ir.ui.view">
+        <field name="name">res.partner.search.national.id.filters</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
                 <separator/>
                 <filter string="له رقم بطاقة" name="has_national_id"
                         domain="[('national_id', '!=', False)]"/>
                 <filter string="بدون رقم بطاقة" name="no_national_id"
                         domain="[('national_id', '=', False)]"/>
-                <group string="تجميع حسب" expand="0" name="group_by_national_id_block">
-                    <filter string="رقم البطاقة" name="group_by_national_id"
-                            context="{'group_by': 'national_id'}"/>
-                </group>
             </xpath>
         </field>
     </record>
