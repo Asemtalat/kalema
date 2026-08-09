@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 1) إضافة الحقل في فورم العميل، جنب حقل الرقم الضريبي (vat) -->
+    <record id="view_partner_form_national_id" model="ir.ui.view">
+        <field name="name">res.partner.form.national.id</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="national_id" placeholder="e.g. 29001011234567"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- 2) إضافة الحقل كعمود في شاشة الليست (Tree/List) -->
+    <record id="view_partner_tree_national_id" model="ir.ui.view">
+        <field name="name">res.partner.list.national.id</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list | //tree" position="inside">
+                <field name="national_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 3) إضافة الحقل في شاشة البحث (Search) عشان يبقى قابل للبحث والفلترة
+         من أي مكان بيستخدم نفس السيرش فيو (عملاء / موردين / جهات الاتصال) -->
+    <record id="view_res_partner_filter_national_id" model="ir.ui.view">
+        <field name="name">res.partner.search.national.id</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="national_id" string="رقم البطاقة"
+                       filter_domain="[('national_id', 'ilike', self)]"/>
+                <separator/>
+                <filter string="له رقم بطاقة" name="has_national_id"
+                        domain="[('national_id', '!=', False)]"/>
+                <filter string="بدون رقم بطاقة" name="no_national_id"
+                        domain="[('national_id', '=', False)]"/>
+                <group string="تجميع حسب" expand="0" name="group_by_national_id_block">
+                    <filter string="رقم البطاقة" name="group_by_national_id"
+                            context="{'group_by': 'national_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
